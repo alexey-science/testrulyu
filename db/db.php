@@ -1,10 +1,10 @@
 <?php
 
 function getConnection(){
-    $host = "81.31.247.100:3306";
-$user = "qvrbhx";
-$pass = "ySJIpliRrHEbyspQ";
-$db_name = "oUwZbkPj";
+    $host = "";
+$user = "";
+$pass = "";
+$db_name = "";
 
 $conn = new mysqli($host, $user, $pass,$db_name);
 
