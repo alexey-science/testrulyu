@@ -1,10 +1,7 @@
 <?php
 
 function getConnection(){
-    $host = "";
-$user = "";
-$pass = "";
-$db_name = "";
+
 
 $conn = new mysqli($host, $user, $pass,$db_name);
 
@@ -36,14 +33,27 @@ function getById($id){
 
 function getByParams($params){
     $strParams = "";
+    $values = array();
+    $types = "";
     foreach($params as $key => $value){
-        $strParams = $strParams .  $key . " = " . $value . " and "; 
+        $strParams = $strParams .  $key . " = ?" . " and "; 
+        $types .= gettype($value)[0];
+        $values[] = $value;
+
     }
-    $strParams = $strParams . " 1=1";
+    $strParams = $strParams . " 1=?";
+    $types .= "i";
+    $values[] = 1;
     $conn = getConnection();
-    $res = $conn->query("SELECT * FROM test WHERE " . $strParams);
-    $row = $res->fetch_assoc();
+    $stmt = $conn->prepare("SELECT * FROM test WHERE " . $strParams);
+    $bindres = $stmt->bind_param($types, ...$values);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_all(MYSQLI_ASSOC);
     return $row;
+    // $res = $conn->query("SELECT * FROM test WHERE " . $strParams);
+    // $row = $res->fetch_all(MYSQLI_ASSOC);
+    // return $row;
 
 }
 
@@ -67,13 +77,18 @@ function updateRow($user_id, $fullname, $role, $efficiency){
 }
 
 
+function deleteAll(){
+    $res = $conn->query("DELETE FROM test");
+    return $res;
+
+}
 function deleteById($id){
-    $stmt = "1=1";
-    if (!is_null($id)){
-        $stmt = "id = " . $id;
-    }
+
     $conn = getConnection();
-    $res = $conn->query("DELETE FROM test WHERE " . $stmt);
+    $res = $conn->query("SELECT * FROM test WHERE id = $id");
+    $row = $res->fetch_assoc();
+
+    $res = $conn->query("DELETE FROM test WHERE id= " . intval($row["id"]));
   
     return $res;
 

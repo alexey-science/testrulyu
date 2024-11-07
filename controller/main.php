@@ -25,7 +25,7 @@ function route($fullPath){
                 if($serverMethod === "GET"){
                     $request_body = file_get_contents('php://input');
                     $request_body = json_decode($request_body, true);
-                    $userId = isset($fullPath[1])?intval($fullPath[1]):null;
+                    $userId = isset($fullPath[1])?$fullPath[1]:null;
                     getMethod($request_body, $userId);
                 }else{
                     sendResponseError("Неверно указан метод http запроса!");  
@@ -35,7 +35,7 @@ function route($fullPath){
                     if($serverMethod === "PATCH"){
                         $request_body = file_get_contents('php://input');
                         $request_body = json_decode($request_body, true);
-                        $userId = intval($fullPath[1]);
+                        $userId = $fullPath[1];
                         updateMethod($request_body, $userId);
                     }else{
                         sendResponseError("Неверно указан метод http запроса!");  
@@ -45,7 +45,7 @@ function route($fullPath){
                         if($serverMethod === "DELETE"){
                             $request_body = file_get_contents('php://input');
                             $request_body = json_decode($request_body, true);
-                            $userId = isset($fullPath[1])?intval($fullPath[1]):null;
+                            $userId = isset($fullPath[1])?$fullPath[1]:null;
                             deleteMethod($request_body, $userId);
                         }else{
                             sendResponseError("Неверно указан метод http запроса!");  
